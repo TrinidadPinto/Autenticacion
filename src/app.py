@@ -9,6 +9,7 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from datetime import timedelta
 
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -18,8 +19,10 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 app.config["JWT_SECRET_KEY"] = "clave-super-secreta"
+app.config["JWT_HEADER_TYPE"] = "Bearer"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 jwt = JWTManager(app)
-CORS(app)
+CORS(app, supports_credentials=True, expose_headers=["Authorization"], allow_headers=["Content-Type", "Authorization"])
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
