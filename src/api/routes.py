@@ -9,7 +9,7 @@ api = Blueprint('api', __name__)
 bcrypt = Bcrypt()
 
 # Allow CORS requests to this API
-CORS(api)
+#CORS(api)
 
 
 @api.route('/hello', methods=['POST', 'GET'])
@@ -54,7 +54,7 @@ def login():
     if not user or not bcrypt.check_password_hash(user.password, password):
         return jsonify({"msg": "Credenciales inválidas"}), 401
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"msg": "Login successful", "token": access_token, "user_id": user.id }), 200
 
 @api.route('/private', methods=['GET'])
@@ -62,6 +62,6 @@ def login():
 def private():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    
+
     print("🧪 JWT recibido:", request.headers.get("Authorization"))
-    return jsonify({ "msg": f"Hola {current_user_id}, bienvenido al área privada", "user":user.serialize}), 200
+    return jsonify({ "msg": f"Hola {current_user_id}, bienvenido al área privada", "user":user.serialize()}), 200

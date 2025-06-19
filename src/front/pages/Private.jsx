@@ -13,13 +13,12 @@ export const Private = () => {
       return;
     }
 
-    console.log("🔐 Token:", token);
-
     fetch(import.meta.env.VITE_BACKEND_URL + "api/private", {
       method:"GET",
       headers: {
-        Authorization: "Bearer" + token
-      }
+        "Authorization": `Bearer ${token}`
+      },
+      credentials: "include"
     })
       .then(res => {
         if (!res.ok) throw new Error("Token inválido o expirado");
